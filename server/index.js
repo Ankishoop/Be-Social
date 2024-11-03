@@ -14,7 +14,7 @@ const __dirname = path.resolve();
 console.log("🚀 ~ __dirname:", __dirname);
 
 //middlewares
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 console.log("🚀 ~ PORT:", PORT);
 app.use(express.json());
 app.use(cookieParser());
