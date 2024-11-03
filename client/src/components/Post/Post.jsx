@@ -51,7 +51,7 @@ function Post({ post }) {
     try {
       //http://localhost:8000/api/v1/post/comment/postid;
       const resp = await axios.post(
-        `http://localhost:8000/api/v1/post/comment/${post._id}`,
+        `https://be-socail-backend-deploy.onrender.com/api/v1/post/comment/${post._id}`,
         {
           msg: text,
         },
@@ -107,7 +107,7 @@ function Post({ post }) {
         console.log(
           "🚀 ~ Post ~ liked:",
           liked
-        )`http://localhost:8000/api/v1/user/profile/${post?.author?._id}`,
+        )`https://be-socail-backend-deploy.onrender.com/api/v1/user/profile/${post?.author?._id}`,
         {},
         {
           withCredentials: true,
@@ -143,7 +143,7 @@ function Post({ post }) {
 
     try {
       const resp = await axios.delete(
-        `http://localhost:8000/api/v1/post/deletepost/${post._id}`,
+        `https://be-socail-backend-deploy.onrender.com/api/v1/post/deletepost/${post._id}`,
         {
           withCredentials: true,
         }
@@ -194,7 +194,7 @@ function Post({ post }) {
   const handleOnLikes = async () => {
     try {
       const resp = await axios.patch(
-        `http://localhost:8000/api/v1/post/updatelike/${post._id}`,
+        `https://be-socail-backend-deploy.onrender.com/api/v1/post/updatelike/${post._id}`,
         {},
         {
           withCredentials: true,

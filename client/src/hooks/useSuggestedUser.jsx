@@ -9,7 +9,7 @@ const useGetSuggestedUsers = () => {
     const fetchSuggestedUsers = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/v1/user/suggesteduser",
+          "https://be-socail-backend-deploy.onrender.com/api/v1/user/suggesteduser",
           { withCredentials: true }
         );
         if (res.data.status === 200) {

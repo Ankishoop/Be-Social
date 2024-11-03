@@ -26,7 +26,7 @@ app.get("*", (req, res) => {
 });
 
 const corsOption = {
-  origin: "http://localhost:5173",
+  origin: process.env.ONLINE_URL,
   credentials: true,
 };
 

@@ -10,7 +10,7 @@ const useGetAllPost = () => {
     const fetchAllPost = async () => {
       try {
         const resp = await axios.get(
-          "http://localhost:8000/api/v1/post/allposts",
+          "https://be-socail-backend-deploy.onrender.com/api/v1/post/allposts",
           {
             withCredentials: true,
           }

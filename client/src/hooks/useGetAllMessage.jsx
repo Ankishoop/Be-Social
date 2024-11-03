@@ -13,7 +13,7 @@ const useGetAllMessage = () => {
     const fetchAllMessages = async () => {
       try {
         const resp = await axios.get(
-          `http://localhost:8000/api/v1/message/get/${selectedUser?._id}`,
+          `https://be-socail-backend-deploy.onrender.com/api/v1/message/get/${selectedUser?._id}`,
           {
             withCredentials: true,
           }

@@ -37,7 +37,7 @@ const Signup = () => {
     try {
       setLoading(true);
       const resp = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        "https://be-socail-backend-deploy.onrender.com/api/v1/user/register",
         formData,
         {
           headers: {

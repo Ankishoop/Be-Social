@@ -46,7 +46,7 @@ const CreatePost = ({ open, setOpen }) => {
 
     setLoading(true);
     const resp = await axios.post(
-      "http://localhost:8000/api/v1/post/addpost",
+      "https://be-socail-backend-deploy.onrender.com/api/v1/post/addpost",
       formData,
       {
         headers: {

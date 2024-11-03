@@ -37,7 +37,7 @@ const SearchProfile = (props) => {
 
     try {
       const resp = await axios.patch(
-        `http://localhost:8000/api/v1/user/profile/${searchUser?._id}`,
+        `https://be-socail-backend-deploy.onrender.com/api/v1/user/profile/${searchUser?._id}`,
         {},
         {
           withCredentials: true,

@@ -28,7 +28,7 @@ const Chatpage = () => {
     console.log(eachuser?._id);
     try {
       const resp = await axios.post(
-        `http://localhost:8000/api/v1/message/send/${eachuser?._id}`,
+        `https://be-socail-backend-deploy.onrender.com/api/v1/message/send/${eachuser?._id}`,
         {
           msg: textMsg,
         },

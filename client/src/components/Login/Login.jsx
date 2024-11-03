@@ -42,7 +42,7 @@ const Login = () => {
       setLoading(true);
       console.log("Loading set to true, making API call...");
       const resp = await axios.post(
-        "http://localhost:8000/api/v1/user/login",
+        "https://be-socail-backend-deploy.onrender.com/api/v1/user/login",
         formData,
         {
           headers: {
