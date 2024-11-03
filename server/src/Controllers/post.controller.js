@@ -9,6 +9,7 @@ import { User } from "../Models/user.model.js";
 
 import cloudinary from "../Utils/cloudinary.js";
 import { getSocketId, io } from "../Socket/socket.js";
+import sharp from "sharp";
 // import { highDtolowD } from "../Utils/sharp.js";
 
 const addPost = async (req, res) => {
