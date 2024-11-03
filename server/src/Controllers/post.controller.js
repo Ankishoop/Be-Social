@@ -3,7 +3,7 @@
 import { populate } from "dotenv";
 import { Comment } from "../Models/comment.model.js";
 import { Post } from "../Models/post.model.js";
-import { User } from "../models/user.model.js";
+import { User } from "../Models/user.model.js";
 import {
   deleteFromCloudinary,
   uploadOnCloudinary,
