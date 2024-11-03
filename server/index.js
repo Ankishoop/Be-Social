@@ -4,10 +4,14 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "./src/utils/db.js";
 import { app, server } from "./src/Socket/socket.js";
+import path from "path";
 dotenv.config();
 
 // console.log("🚀 ~ process.env.PORT:", process.env.PORT);
 // const app = express();
+
+const __dirname = path.resolve();
+console.log("🚀 ~ __dirname:", __dirname);
 
 //middlewares
 const PORT = process.env.PORT;
@@ -15,6 +19,11 @@ console.log("🚀 ~ PORT:", PORT);
 app.use(express.json());
 app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+});
 
 const corsOption = {
   origin: "http://localhost:5173",
