@@ -20,11 +20,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, "/client/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
-});
-
 const corsOption = {
   origin: process.env.ONLINE_URL,
   credentials: true,
@@ -64,3 +59,8 @@ import MessageRouter from "./src/Routes/message.route.js";
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/post", PostRouter);
 app.use("/api/v1/message", MessageRouter);
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+});
