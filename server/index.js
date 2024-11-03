@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express, { urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import connectDB from "./src/utils/db.js";
+import connectDB from "./src/Utils/db.js";
 import { app, server } from "./src/Socket/socket.js";
 import path from "path";
 dotenv.config();
@@ -15,7 +15,7 @@ console.log("🚀 ~ __dirname:", __dirname);
 
 //middlewares
 const PORT = process.env.PORT || 8000;
-console.log("🚀 ~ PORT:", PORT);
+// console.log("🚀 ~ PORT:", PORT);
 app.use(express.json());
 app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
