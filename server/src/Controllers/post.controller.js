@@ -29,7 +29,7 @@ const addPost = async (req, res) => {
   // const postcloudinaryUrl = await uploadOnCloudinary(postlocalpath);
   // console.log("🚀 ~ addPost ~ postcloudinaryUrl:", postcloudinaryUrl);
 
-  const optimizedImageBuffer = await sharp(image.buffer)
+  const optimizedImageBuffer = await sharp(postImage.buffer)
     .resize({ width: 800, height: 800, fit: "inside" })
     .toFormat("jpeg", { quality: 80 })
     .toBuffer();
