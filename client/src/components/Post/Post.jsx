@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { setPosts } from "@/redux/postSlice";
+import { useEffect } from "react";
 
 function Post({ post }) {
   console.log("🚀 ~ Post ~ post:", post);
@@ -13,6 +14,22 @@ function Post({ post }) {
 
   const { user } = useSelector((state) => state.auth);
   const { posts } = useSelector((state) => state.post);
+  const { isLoggedIn } = useSelector((state) => state.login);
+
+  useEffect(() => {
+    console.log("here");
+    console.log("🚀 ~ App ~ isLogin:", isLoggedIn);
+
+    if (!isLoggedIn) {
+      navigate("/login");
+      dispatch(setAuthUser(null));
+      dispatch(setPosts([]));
+    }
+
+    if (!isLoggedIn && user) {
+      navigate("/login");
+    }
+  }, []);
 
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
@@ -26,7 +43,48 @@ function Post({ post }) {
   const [postlike, setPostlike] = useState(post?.likes.length);
 
   const dispatch = useDispatch();
-  const handleonComment = () => {};
+  const handleonComment = async () => {
+    if (text.trim() === "") {
+      return;
+    }
+
+    try {
+      //http://localhost:8000/api/v1/post/comment/postid;
+      const resp = await axios.post(
+        `http://localhost:8000/api/v1/post/comment/${post._id}`,
+        {
+          msg: text,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("🚀 ~ handleonComment ~ resp:", resp.data.comment);
+      if (resp.data.status === 200) {
+        toast.success(resp.data.msg);
+        setText("");
+
+        const newComment = resp.data?.comment;
+
+        const updatedPosts = posts.map((eachpost) => {
+          if (post._id === eachpost._id) {
+            return {
+              ...eachpost,
+              comments: [...eachpost.comments, newComment],
+            };
+          } else {
+            return eachpost;
+          }
+        });
+        console.log("🚀 ~ updatedPosts ~ updatedPosts:", updatedPosts);
+
+        dispatch(setPosts(updatedPosts));
+      }
+    } catch (error) {
+      toast.error("Comment not Added");
+    }
+  };
 
   const changeEventHandler = (e) => {
     const inputText = e.target.value;
@@ -207,97 +265,118 @@ function Post({ post }) {
   };
 
   return (
-    <div className="my-8 p-2w-full max-w-sm mx-auto border border-gray-100 p-2">
-      <div className="flex items-center justify-between border-b border-gray-100 bg-slate-100 shadow-inner">
-        <div className="flex items-center gap-2">
-          <img
-            src={post.author.profilePicture}
-            alt="Post image"
-            className="max-w-16 rounded-lg"
-            // style={{
-            //   width: "40px",
-            //   height: "40px",
-            //   border: "none",
-            //   borderRadius: "50%",
-            //   objectFit: "cover",
-            //   backgroundColor: "black",
-            // }}
-          />
-          <h1>{post.author.username}</h1>
-        </div>
+    <>
+      {isLoggedIn && (
+        <div className="my-8 p-2w-full max-w-lg mx-auto border border-gray-100 p-2">
+          <div className="flex items-center justify-between border-b border-gray-100 bg-slate-100 shadow-inner">
+            <div className="flex items-center gap-2">
+              <img
+                src={post.author.profilePicture}
+                alt="Post image"
+                className="max-w-16 rounded-lg"
+                // style={{
+                //   width: "40px",
+                //   height: "40px",
+                //   border: "none",
+                //   borderRadius: "50%",
+                //   objectFit: "cover",
+                //   backgroundColor: "black",
+                // }}
+              />
+              <h1>{post.author.username}</h1>
+            </div>
 
-        <DialogComponent dialogContent={dialogContent} post={post} />
-      </div>
-      <div>
-        <img
-          src={post.image}
-          //  style={{
-          //    width: "40px",
-          //    height: "40px",
-          //    border: "none",
-          //    borderRadius: "50%",
-          //    objectFit: "cover",
-          //    backgroundColor: "black",
-          //  }}
-          className="rounded-sm mb-2 w-full aspect-square object-contain"
-        />
-      </div>
-      <div className="flex justify-between mb-2">
-        <div className="flex gap-3 items-center">
-          <div className="flex gap-1">
-            <Heart
-              className="cursor-pointer "
-              // color="red"
-              fill={liked ? "red" : "none"}
-              onClick={handleOnLikes}
-            />
-            <span> {postlike}</span>
-          </div>
-          <div className="flex gap-1">
-            <MessageCircleCodeIcon
-              className="cursor-pointer hover:text-gray-400 "
-              onClick={() => setOpen(true)}
-            />
-            <span>{post.comments.length}</span>
+            <DialogComponent dialogContent={dialogContent} post={post} />
           </div>
           <div>
-            <Send size={20} className="cursor-pointer hover:text-gray-400 " />
+            <img
+              src={post.image}
+              //  style={{
+              //    width: "40px",
+              //    height: "40px",
+              //    border: "none",
+              //    borderRadius: "50%",
+              //    objectFit: "cover",
+              //    backgroundColor: "black",
+              //  }}
+              className="rounded-sm mb-2 w-full aspect-square object-contain"
+            />
+          </div>
+          <div className="flex justify-between mb-2">
+            <div className="flex gap-3 items-center">
+              <div className="flex gap-1">
+                <Heart
+                  className="cursor-pointer "
+                  // color="red"
+                  fill={liked ? "red" : "none"}
+                  onClick={handleOnLikes}
+                />
+                <span> {postlike}</span>
+              </div>
+              <div className="flex gap-1">
+                <MessageCircleCodeIcon
+                  className="cursor-pointer hover:text-gray-400 "
+                  onClick={() => setOpen(true)}
+                />
+                <span>{post.comments.length}</span>
+              </div>
+              <div>
+                <Send
+                  size={20}
+                  className="cursor-pointer hover:text-gray-400 "
+                />
+              </div>
+            </div>
+
+            <div>
+              <BookIcon fill="transparent" />
+            </div>
+          </div>
+          <p>
+            <span className="font-medium mr-2">{post.author.username}</span>
+            {post.caption}
+          </p>
+          {post.comments.length > 0 ? (
+            <span
+              onClick={() => setOpen(true)}
+              className="cursor-pointer text-gray-400"
+            >
+              View All 10 comments ....
+            </span>
+          ) : (
+            <span>No comment yet ....</span>
+          )}
+          <CommentDialog
+            open={open}
+            setOpen={setOpen}
+            post={post}
+            text={text}
+            setText={setText}
+            handleonComment={handleonComment}
+          />
+
+          <div className="flex items-center">
+            <input
+              type="text"
+              placeholder="Add a comment"
+              value={text}
+              onChange={(e) => {
+                changeEventHandler(e);
+              }}
+              className="outline-none w-full text-sm p-4"
+            />
+            {text && (
+              <span
+                className="text-blue-700 cursor-pointer hover:text-gray-600 "
+                onClick={handleonComment}
+              >
+                Post
+              </span>
+            )}
           </div>
         </div>
-
-        <div>
-          <BookIcon fill="transparent" />
-        </div>
-      </div>
-      <p>
-        <span className="font-medium mr-2">{post.author.username}</span>
-        {post.caption}
-      </p>
-      <span
-        onClick={() => setOpen(true)}
-        className="cursor-pointer text-gray-400"
-      >
-        View All 10 comments ....
-      </span>
-      <CommentDialog open={open} setOpen={setOpen} post={post} />
-
-      <div className="flex items-center">
-        <input
-          type="text"
-          placeholder="Add a comment"
-          value={text}
-          onChange={(e) => {
-            changeEventHandler(e);
-          }}
-          className="outline-none w-full text-sm p-4"
-        />
-        {text && (
-          <span className="text-blue-700 cursor-pointer hover:text-gray-600 ">
-            Post
-          </span>
-        )}
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

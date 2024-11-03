@@ -8,12 +8,15 @@ import {
   getProfile,
   followandunfollow,
   getSuggestedUsers,
+  SearchUser,
+  isAuthentigated,
 } from "../Controllers/user.controller.js";
 import { verifyJWT } from "../Middlewares/auth.js";
 import { upload } from "../Middlewares/multer.js";
 
 const router = Router();
 
+router.route("/isauthenticated").get(verifyJWT, isAuthentigated);
 router.route("/login").post(login);
 router.route("/register").post(register);
 router.route("/logout").get(verifyJWT, logout);
@@ -28,6 +31,8 @@ router
   .patch(verifyJWT, followandunfollow);
 
 router.route("/suggesteduser").get(verifyJWT, getSuggestedUsers);
+
+router.route("/search").get(verifyJWT, SearchUser);
 
 //in video the Routes are like that
 // router.route("/login").post(login);

@@ -3,10 +3,11 @@ import express, { urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "./src/utils/db.js";
+import { app, server } from "./src/Socket/socket.js";
 dotenv.config();
 
 // console.log("🚀 ~ process.env.PORT:", process.env.PORT);
-const app = express();
+// const app = express();
 
 //middlewares
 const PORT = process.env.PORT;
@@ -32,7 +33,7 @@ app.use(cors(corsOption));
 const DatabaseConnection = async () => {
   await connectDB()
     .then(() => {
-      app.listen(PORT, () => {
+      server.listen(PORT, () => {
         console.log(`server listen at port ${PORT}`);
       });
     })
@@ -53,4 +54,4 @@ import MessageRouter from "./src/Routes/message.route.js";
 
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/post", PostRouter);
-app.use("api/v1/message", MessageRouter);
+app.use("/api/v1/message", MessageRouter);

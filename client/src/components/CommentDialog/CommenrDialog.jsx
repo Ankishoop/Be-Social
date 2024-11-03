@@ -3,9 +3,16 @@ import { Dialog, DialogContent, DialogClose, DialogTitle } from "../ui/dialog";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 
-function CommentDialog({ open, setOpen, post }) {
+function CommentDialog({
+  open,
+  setOpen,
+  post,
+  text,
+  setText,
+  handleonComment,
+}) {
   console.log("🚀 ~ CommentDialog ~ post:", post);
-  const [text, setText] = useState("");
+  // const [text, setText] = useState("");
 
   const changeEventHandler = (e) => {
     const tempText = e.target.value;
@@ -18,7 +25,8 @@ function CommentDialog({ open, setOpen, post }) {
   };
 
   const sendMessageHandler = async () => {
-    alert("button");
+    // alert("button");
+    handleonComment();
   };
 
   return (

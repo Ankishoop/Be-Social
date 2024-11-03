@@ -402,6 +402,46 @@ const followandunfollow = async (req, res) => {
   }
 };
 
+const SearchUser = async (req, res) => {
+  try {
+    const { query } = req.query; // Get the search term from the query parameters
+    console.log("🚀 ~ SearchUser ~ query:", query);
+
+    if (!query) {
+      return res.status(400).json({ message: "Search term is required" });
+    }
+
+    const users = await User.find({
+      username: { $regex: query, $options: "i" }, // 'i' makes it case-insensitive
+    })
+      .select("-password")
+      .limit(10); // Limit the number of results, adjust as necessary
+
+    return res
+      .status(200)
+      .json({ users, message: "Searched USer", status: 200 });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const isAuthentigated = async (req, res) => {
+  try {
+    const user = req.logged_in_user;
+
+    return res.status(200).json({
+      isAuthentigated: true,
+      user,
+      status: 200,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      isAuthentigated: false,
+      status: 401,
+    });
+  }
+};
+
 export {
   login,
   logout,
@@ -411,4 +451,6 @@ export {
   getProfile,
   followandunfollow,
   getSuggestedUsers,
+  SearchUser,
+  isAuthentigated,
 };

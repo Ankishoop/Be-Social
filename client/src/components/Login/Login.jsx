@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { setAuthUser } from "@/redux/authSlice";
 import { useDispatch } from "react-redux";
+import { setLoginUser } from "@/redux/loginSlice";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -62,6 +63,7 @@ const Login = () => {
         });
 
         dispatch(setAuthUser(resp?.data?.ExistedUser));
+        dispatch(setLoginUser(true));
         navigate("/");
       }
     } catch (error) {

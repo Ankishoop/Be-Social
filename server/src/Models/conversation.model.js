@@ -13,7 +13,7 @@ const conversationSchema = new Schema(
     messages: [
       {
         type: Schema.Types.ObjectId,
-        ref: "message",
+        ref: "Message",
       },
     ],
   },

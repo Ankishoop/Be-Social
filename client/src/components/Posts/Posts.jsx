@@ -13,7 +13,7 @@ function Posts() {
   console.log("🚀 ~ Posts ~ posts:", posts.length);
 
   return (
-    <div>
+    <div className="w-1/2">
       {posts.length > 0 ? (
         posts.map((post) => {
           return <Post key={post._id} post={post} />;

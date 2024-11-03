@@ -8,6 +8,7 @@ import {
   deleteFromCloudinary,
   uploadOnCloudinary,
 } from "../Utils/cloudinary.js";
+import { getSocketId, io } from "../Socket/socket.js";
 // import { highDtolowD } from "../Utils/sharp.js";
 
 const addPost = async (req, res) => {
@@ -190,6 +191,24 @@ const likeandunlike = async (req, res) => {
       );
       console.log("🚀 ~ likeandunlike ~ updatedpost:", updatedpost);
       await updatedpost.populate({ path: "likes", select: "-password" });
+
+      const userLiked = await User.findById(user._id).select(
+        "username profilePicture"
+      );
+
+      if (user._id !== post.author.toString()) {
+        const authorSocketId = getSocketId(post?.author.toString());
+
+        const notification = {
+          type: "dislike",
+          userId: user._id,
+        };
+
+        if (authorSocketId) {
+          io.to(authorSocketId).emit("notification", notification);
+        }
+      }
+
       res.status(200).json({
         msg: `user unlike`,
         status: 200,
@@ -211,6 +230,26 @@ const likeandunlike = async (req, res) => {
       );
       console.log("🚀 ~ likeandunlike ~ updatedpost:", updatedpost);
       await updatedpost.populate({ path: "likes", select: "-password" });
+      const userLiked = await User.findById(user._id).select(
+        "username profilePicture"
+      );
+
+      if (user._id !== post.author.toString()) {
+        const authorSocketId = getSocketId(post?.author.toString());
+
+        const notification = {
+          type: "like",
+          userId: user._id,
+          userDetails: userLiked,
+          postId,
+          message: "Your post Liked",
+        };
+
+        if (authorSocketId) {
+          io.to(authorSocketId).emit("notification", notification);
+        }
+      }
+
       res.status(200).json({
         msg: `user like`,
         status: 200,
