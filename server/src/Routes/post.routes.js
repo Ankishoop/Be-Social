@@ -11,7 +11,7 @@ import {
 } from "../Controllers/post.controller.js";
 import { verifyJWT } from "../Middlewares/auth.js";
 // import { uploadbuffer } from "../Middlewares/multer.js";
-import { upload } from "../Middlewares/multer.js";
+import upload from "../Middlewares/multer.js";
 
 const router = Router();
 

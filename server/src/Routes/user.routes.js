@@ -12,7 +12,7 @@ import {
   isAuthentigated,
 } from "../Controllers/user.controller.js";
 import { verifyJWT } from "../Middlewares/auth.js";
-import { upload } from "../Middlewares/multer.js";
+import upload from "../Middlewares/multer.js";
 
 const router = Router();
 

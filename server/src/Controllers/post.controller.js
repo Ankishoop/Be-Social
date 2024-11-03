@@ -2,18 +2,18 @@
 import { Comment } from "../Models/comment.model.js";
 import { Post } from "../Models/post.model.js";
 import { User } from "../Models/user.model.js";
-import {
-  deleteFromCloudinary,
-  uploadOnCloudinary,
-} from "../Utils/cloudinary.js";
+// import {
+//   deleteFromCloudinary,
+//   uploadOnCloudinary,
+// } from "../Utils/cloudinary.js";
+
+import cloudinary from "../Utils/cloudinary.js";
 import { getSocketId, io } from "../Socket/socket.js";
 // import { highDtolowD } from "../Utils/sharp.js";
 
 const addPost = async (req, res) => {
   const user = req.logged_in_user;
-
   const { caption } = req.body;
-
   const postImage = req.file;
   // console.log("🚀 ~ addPost ~ postImage:", postImage);
 
@@ -24,14 +24,24 @@ const addPost = async (req, res) => {
     });
   }
 
-  const postlocalpath = postImage?.path;
+  // const postlocalpath = postImage?.path;
+  // const postcloudinaryUrl = await uploadOnCloudinary(postlocalpath);
+  // console.log("🚀 ~ addPost ~ postcloudinaryUrl:", postcloudinaryUrl);
 
-  const postcloudinaryUrl = await uploadOnCloudinary(postlocalpath);
-  console.log("🚀 ~ addPost ~ postcloudinaryUrl:", postcloudinaryUrl);
+  const optimizedImageBuffer = await sharp(image.buffer)
+    .resize({ width: 800, height: 800, fit: "inside" })
+    .toFormat("jpeg", { quality: 80 })
+    .toBuffer();
+
+  // buffer to data uri
+  const fileUri = `data:image/jpeg;base64,${optimizedImageBuffer.toString(
+    "base64"
+  )}`;
+  const cloudResponse = await cloudinary.uploader.upload(fileUri);
 
   const post = await Post.create({
     caption,
-    image: postcloudinaryUrl?.url,
+    image: cloudResponse?.secure_url,
     author: user?._id,
   });
 
@@ -103,10 +113,10 @@ const deletePost = async (req, res) => {
       });
     }
 
-    const cloudinaryUrl = post.image;
+    // const cloudinaryUrl = post.image;
 
-    const Previous_image = await deleteFromCloudinary(cloudinaryUrl);
-    console.log("🚀 ~ deletePost ~ Previous_image:", Previous_image);
+    // const Previous_image = await deleteFromCloudinary(cloudinaryUrl);
+    // console.log("🚀 ~ deletePost ~ Previous_image:", Previous_image);
 
     //delete the post document
     const isDeleted = await Post.deleteOne({ _id: postId });

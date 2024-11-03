@@ -1,8 +1,10 @@
 import { User } from "../Models/user.model.js";
-import {
-  deleteFromCloudinary,
-  uploadOnCloudinary,
-} from "../Utils/cloudinary.js";
+// import {
+//   deleteFromCloudinary,
+//   uploadOnCloudinary,
+// } from "../Utils/cloudinary.js";
+import cloudinary from "../Utils/cloudinary.js";
+import getDataUri from "../Utils/datauri.js";
 
 const options = {
   httpOnly: true,
@@ -233,17 +235,24 @@ const editProfile = async (req, res) => {
     // user.bio = bio;
     // user.gender = gender;
 
-    const profileImageCloudinaryURL = await uploadOnCloudinary(
-      profileImage?.path
-    );
-    console.log(
-      "🚀 ~ editProfile ~ profileImageCloudinaryURL:",
-      profileImageCloudinaryURL
-    );
+    // const profileImageCloudinaryURL = await uploadOnCloudinary(
+    //   profileImage?.path
+    // );
+    // console.log(
+    //   "🚀 ~ editProfile ~ profileImageCloudinaryURL:",
+    //   profileImageCloudinaryURL
+    // );
 
-    if (user.profilePicture || user.profilePicture !== "") {
-      const deletePreviosImage = await deleteFromCloudinary(user.profileImage);
-      // console.log("🚀 ~ editProfile ~ deletePreviosImage:", deletePreviosImage);
+    // if (user.profilePicture || user.profilePicture !== "") {
+    //   const deletePreviosImage = await deleteFromCloudinary(user.profileImage);
+    //   // console.log("🚀 ~ editProfile ~ deletePreviosImage:", deletePreviosImage);
+    // }
+
+    let cloudResponse;
+
+    if (profilePicture) {
+      const fileUri = getDataUri(profilePicture);
+      cloudResponse = await cloudinary.uploader.upload(fileUri);
     }
 
     const newuser = await User.findByIdAndUpdate(
@@ -252,7 +261,7 @@ const editProfile = async (req, res) => {
         $set: {
           bio,
           gender,
-          profilePicture: profileImageCloudinaryURL?.url,
+          profilePicture: cloudResponse?.secure_url,
         },
       },
       {
