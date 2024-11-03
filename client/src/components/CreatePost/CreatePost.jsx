@@ -45,34 +45,35 @@ const CreatePost = ({ open, setOpen }) => {
     console.log("🚀 ~ createPostHandler ~ formData:", formData);
 
     setLoading(true);
-    const resp = await axios.post(
-      "https://be-socail-backend-deploy.onrender.com/api/v1/post/addpost",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      }
-    );
-    console.log("🚀 ~ createPostHandler ~ resp:", resp);
-
-    if (resp.data.status == 200) {
-      setStep(2);
-      setNewImage(resp.data.post.image);
-      toast.success("User Post SuccessFully", {
-        icon: "🎉",
-      });
-
-      dispatch(addPost(resp.data.post));
-
-      setTimeout(() => {
-        setOpen(false);
-      }, 5000);
-    }
 
     try {
+      const resp = await axios.post(
+        "https://be-socail-backend-deploy.onrender.com/api/v1/post/addpost",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log("🚀 ~ createPostHandler ~ resp:", resp);
+
+      if (resp.data.status == 200) {
+        setStep(2);
+        setNewImage(resp.data.post.image);
+        toast.success("User Post SuccessFully", {
+          icon: "🎉",
+        });
+
+        dispatch(addPost(resp.data.post));
+
+        setTimeout(() => {
+          setOpen(false);
+        }, 5000);
+      }
     } catch (error) {
+      console.log(error);
       toast.error("error");
     } finally {
       setLoading(false);
